@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -36,22 +37,22 @@ func ReadConfig(dir string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	c.SourceLocation = string(b)
+	c.SourceLocation = strings.TrimSpace(string(b))
 	b, err = os.ReadFile(filepath.Join(dir, "source_server"))
 	if err != nil {
 		return nil, err
 	}
-	c.SourceServer = string(b)
+	c.SourceServer = strings.TrimSpace(string(b))
 	b, err = os.ReadFile(filepath.Join(dir, "source_password"))
 	if err != nil {
 		return nil, err
 	}
-	c.SourcePassword = string(b)
+	c.SourcePassword = strings.TrimSpace(string(b))
 	b, err = os.ReadFile(filepath.Join(dir, "orchestrator_password"))
 	if err != nil {
 		return nil, err
 	}
-	c.OrchestratorPassword = string(b)
+	c.OrchestratorPassword = strings.TrimSpace(string(b))
 	return c, nil
 }
 
