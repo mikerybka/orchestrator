@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sync"
 )
 
 func main() {
@@ -60,6 +61,7 @@ type Config struct {
 	SourceServer         string
 	SourcePassword       string
 	OrchestratorPassword string
+	lock                 sync.Mutex
 }
 
 func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -75,6 +77,11 @@ func (c *Config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Config) update() error {
+	ok := c.lock.TryLock()
+	if !ok {
+		return fmt.Errorf("locked")
+	}
+	defer c.lock.Unlock()
 	c, err := ReadConfig(c.ConfigDir)
 	if err != nil {
 		return err
