@@ -31,7 +31,7 @@ func main() {
 }
 
 func ReadConfig(dir string) (*Config, error) {
-	var c *Config
+	c := Config{}
 	c.ConfigDir = dir
 	b, err := os.ReadFile(filepath.Join(dir, "source_location"))
 	if err != nil {
@@ -53,7 +53,7 @@ func ReadConfig(dir string) (*Config, error) {
 		return nil, err
 	}
 	c.OrchestratorPassword = strings.TrimSpace(string(b))
-	return c, nil
+	return &c, nil
 }
 
 type Config struct {
